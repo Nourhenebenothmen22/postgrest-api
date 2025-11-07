@@ -10,10 +10,6 @@
 
 ## 📸 Project Overview
 
-<p align="center">
-  <img src="docs/architecture-diagram.png" alt="Project Architecture" width="80%">
-</p>
-
 This project is a **secure, production-ready backend API** built with **Express.js** and **PostgreSQL**.  
 It follows best practices for **security**, **performance**, and **clean code structure**.
 
