@@ -30,3 +30,57 @@ It follows best practices for **security**, **performance**, and **clean code st
 
 ## 🏗️ Project Architecture
 
+
+
+---
+
+## ⚙️ Tech Stack
+
+| Layer | Technology | Description |
+|:------|:------------|:-------------|
+| 💻 Backend | Node.js + Express | Core web framework |
+| 🗄️ Database | PostgreSQL | SQL relational database |
+| 🔐 Security | Helmet, XSS-Clean, HPP, Mongo-Sanitize | Protects against common web vulnerabilities |
+| 🧩 Validation | Joi | Data schema validation |
+| 📦 Compression | Compression | Improves performance with gzip |
+| ⚡ Logger | Morgan + Winston | Request & error logging |
+| 🔧 Dev Tools | Nodemon, ESLint, Prettier | Development convenience |
+
+---
+
+## 🔒 Why SQL instead of NoSQL?
+
+| Criteria | SQL (PostgreSQL) | NoSQL (MongoDB) |
+|-----------|------------------|----------------|
+| 💾 Data Structure | Structured (tables, relations) | Unstructured (documents) |
+| 🔍 Query Power | Complex joins, transactions | Simple lookups |
+| 🧠 Consistency | Strong ACID compliance | Eventual consistency |
+| 🧰 Use Case | Ideal for structured data, authentication, financial & HR systems | Ideal for flexible, fast-scaling apps |
+
+👉 **PostgreSQL was chosen** for its **data integrity**, **ACID compliance**, and **strong relational capabilities**, making it ideal for enterprise-grade systems.
+
+---
+
+## 🧱 Middlewares Used
+
+| Middleware | Description |
+|-------------|--------------|
+| `helmet` | Secures HTTP headers |
+| `xss-clean` | Prevents cross-site scripting |
+| `express-rate-limit` | Limits requests to prevent abuse |
+| `hpp` | Prevents HTTP parameter pollution |
+| `express-mongo-sanitize` | Sanitizes user inputs |
+| `cors` | Enables cross-origin resource sharing |
+| `compression` | Reduces response body size |
+| `morgan` | Logs HTTP requests |
+
+---
+
+## 🚀 Installation & Setup
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/yourusername/postgrest-api.git
+cd postgrest-api
+
+
