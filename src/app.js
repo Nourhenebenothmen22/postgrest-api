@@ -17,7 +17,6 @@ const xss = require("xss-clean");
 
 // Custom middlewares (to be implemented)
 
-
 // Routes (to be implemented)
 
 const app = express();
@@ -68,7 +67,6 @@ app.use(xss());
 // ========================================
 // ⚠️ Error Handling Middlewares
 // ========================================
-
 
 // Global error handler
 
