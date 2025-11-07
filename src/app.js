@@ -14,8 +14,6 @@ const morgan = require("morgan");
 const compression = require("compression");
 const hpp = require("hpp");
 const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
-const xss = require("xss-clean");
 
 // =====================================
 // 🧩 Import Custom Modules
@@ -36,32 +34,54 @@ createUserTable();
 const app = express();
 
 // =====================================
-// ⚙️ Global Middlewares
+// ⚙️ Global Middlewares - OPTIMIZED ORDER
 // =====================================
 
-// 🧱 Security and Performance
-app.use(express.json());         // Parse JSON request bodies
-app.use(cors());                 // Enable Cross-Origin Resource Sharing
-app.use(helmet());               // Secure HTTP headers
-app.use(morgan("dev"));          // Log HTTP requests (development mode)
-app.use(compression());          // Compress response payloads
-app.use(hpp());                  // Prevent HTTP Parameter Pollution
-app.use(mongoSanitize());        // Prevent MongoDB operator injection
-app.use(xss());                  // Prevent XSS (Cross-Site Scripting) attacks
+// 🔒 1. SECURITY MIDDLEWARES (First line of defense)
+app.use(helmet());         // Secure HTTP headers - FIRST!
+app.use(cors());           // Enable Cross-Origin Resource Sharing
 
-// 🚦 Rate Limiter — Protect against brute-force or DDoS attacks
+// 📊 2. LOGGING & MONITORING (Before request processing)
+app.use(morgan("dev"));    // Log HTTP requests (development mode)
+
+// 🚦 3. RATE LIMITING (Early rejection of excessive requests)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,                  // limit each IP to 100 requests per window
-  message: "Too many requests from this IP, please try again later."
+  message: {
+    status: "error",
+    message: "Too many requests from this IP, please try again later."
+  },
+  standardHeaders: true,
+  legacyHeaders: false
 });
-app.use(limiter);
+app.use("/api", limiter);  // Appliquer seulement aux routes API
+
+// 📦 4. BODY PARSING (Prepare request data)
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// ⚠️ 6. HTTP PARAMETER POLLUTION PROTECTION
+app.use(hpp());            // Prevent HTTP Parameter Pollution
+
+// 💨 7. PERFORMANCE OPTIMIZATION
+app.use(compression());    // Compress response payloads
 
 // =====================================
 // 🧭 Routes
 // Mount all application routes
 // =====================================
 app.use("/api/v1/users", userRoutes); // User-related routes
+
+// 🏠 Health check route
+app.get("/api/v1/health", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "API is running successfully",
+    timestamp: new Date().toISOString()
+  });
+});
+
 
 // =====================================
 // ⚠️ Global Error Handler
