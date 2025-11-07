@@ -28,7 +28,7 @@ It follows best practices for **security**, **performance**, and **clean code st
 
 ---
 
-## 🏗️ Project Architecture
+
 ## 🏗️ Project Architecture
 
 ```bash
