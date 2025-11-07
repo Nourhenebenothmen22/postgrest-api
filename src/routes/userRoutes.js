@@ -1,12 +1,45 @@
+/**
+ * @file userRoutes.js
+ * @description Defines all user-related API endpoints.
+ */
+
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController'); // importer le controller
 
-// Assign endpoints to controller functions
-router.post('/', userController.createUser);      // POST /api/users
-router.get('/', userController.getAllUsers);      // GET /api/users
-router.get('/:id', userController.getUserById);   // GET /api/users/:id
-router.put('/:id', userController.updateUser);    // PUT /api/users/:id
-router.delete('/:id', userController.deleteUser); // DELETE /api/users/:id
+// Import controller functions
+const {
+  createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} = require('../controllers/userController');
 
+// ============================
+// 📦 User Routes
+// ============================
+
+// @route   POST /api/v1/users
+// @desc    Create a new user
+router.post('/', createUser);
+
+// @route   GET /api/v1/users
+// @desc    Get all users
+router.get('/', getAllUsers);
+
+// @route   GET /api/v1/users/:id
+// @desc    Get a single user by ID
+router.get('/:id', getUserById);
+
+// @route   PUT /api/v1/users/:id
+// @desc    Update a user by ID
+router.put('/:id', updateUser);
+
+// @route   DELETE /api/v1/users/:id
+// @desc    Delete a user by ID
+router.delete('/:id', deleteUser);
+
+// ============================
+// Export Router
+// ============================
 module.exports = router;
