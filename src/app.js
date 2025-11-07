@@ -1,8 +1,10 @@
 /**
  * @file app.js
- * @description Main application file for the Node.js Express API.
- * Sets up the Express server, security & performance middlewares,
- * mounts API routes, and handles errors globally.
+ * @description Main entry point for the Express API application.
+ * Initializes the Express app, sets up global middlewares for
+ * security, performance, and request handling, mounts all routes,
+ * and integrates error handling. Also ensures the database table
+ * structure is initialized at startup.
  */
 
 const express = require("express");
@@ -15,21 +17,39 @@ const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
-// Import custom middlewares
-const errorHandling = require('./middlewares/errorMiddleware');
-
-// Import routes
+// =====================================
+// 🧩 Import Custom Modules
+// =====================================
+const errorHandling = require("./middlewares/errorMiddleware");
+const createUserTable = require("./data/createUserTable");
 const userRoutes = require("./routes/userRoutes");
 
-// ================================
-// 🔹 Create Express App
-// ================================
+// =====================================
+// 🗄️ Initialize Database Table
+// Ensures the 'users' table exists before handling requests
+// =====================================
+createUserTable();
+
+// =====================================
+// 🚀 Initialize Express Application
+// =====================================
 const app = express();
 
-// ================================
-// 🚀 Rate Limiter
-// Limits repeated requests to public APIs and endpoints
-// ================================
+// =====================================
+// ⚙️ Global Middlewares
+// =====================================
+
+// 🧱 Security and Performance
+app.use(express.json());         // Parse JSON request bodies
+app.use(cors());                 // Enable Cross-Origin Resource Sharing
+app.use(helmet());               // Secure HTTP headers
+app.use(morgan("dev"));          // Log HTTP requests (development mode)
+app.use(compression());          // Compress response payloads
+app.use(hpp());                  // Prevent HTTP Parameter Pollution
+app.use(mongoSanitize());        // Prevent MongoDB operator injection
+app.use(xss());                  // Prevent XSS (Cross-Site Scripting) attacks
+
+// 🚦 Rate Limiter — Protect against brute-force or DDoS attacks
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,                  // limit each IP to 100 requests per window
@@ -37,31 +57,19 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ================================
-// 🧱 Security & Performance Middlewares
-// ================================
-app.use(express.json());       // Parse incoming JSON requests
-app.use(cors());               // Enable Cross-Origin Resource Sharing
-app.use(helmet());             // Set secure HTTP headers
-app.use(morgan("dev"));        // Log HTTP requests in development mode
-app.use(compression());        // Compress response bodies for better performance
-app.use(hpp());                // Prevent HTTP Parameter Pollution attacks
-app.use(mongoSanitize());      // Sanitize user input to prevent MongoDB operator injection
-app.use(xss());                // Clean user input to prevent XSS attacks
+// =====================================
+// 🧭 Routes
+// Mount all application routes
+// =====================================
+app.use("/api/v1/users", userRoutes); // User-related routes
 
-// ================================
-// 📦 Routes
-// Mount all API routes under /api/v1/users
-// ================================
-app.use("/api/v1/users", userRoutes);
-
-// ================================
-// ⚠️ Global Error Handling Middleware
-// Must be placed after all routes
-// ================================
+// =====================================
+// ⚠️ Global Error Handler
+// Should be the last middleware in the stack
+// =====================================
 app.use(errorHandling);
 
-// ================================
-// 🔹 Export Express App
-// ================================
+// =====================================
+// 📦 Export Express App
+// =====================================
 module.exports = app;
