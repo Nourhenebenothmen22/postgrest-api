@@ -2,7 +2,7 @@
  * @file app.js
  * @description Main application file for the Node.js Express API.
  * Sets up the Express server, security & performance middlewares,
- * and prepares the app for routing and error handling.
+ * mounts API routes, and handles errors globally.
  */
 
 const express = require("express");
@@ -15,49 +15,53 @@ const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
-// Import user routes
-const userRoutes = require("./routes/userRoutes"); // <-- add this
+// Import custom middlewares
+const errorHandling = require('./middlewares/errorMiddleware');
 
-// Create Express app
+// Import routes
+const userRoutes = require("./routes/userRoutes");
+
+// ================================
+// 🔹 Create Express App
+// ================================
 const app = express();
 
-// ========================================
+// ================================
 // 🚀 Rate Limiter
 // Limits repeated requests to public APIs and endpoints
-// ========================================
+// ================================
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per window
-  message: "Too many requests from this IP, please try again later.",
+  max: 100,                  // limit each IP to 100 requests per window
+  message: "Too many requests from this IP, please try again later."
 });
 app.use(limiter);
 
-// ========================================
+// ================================
 // 🧱 Security & Performance Middlewares
-// ========================================
-app.use(express.json());       // Parse JSON requests
-app.use(cors());               // Enable CORS
-app.use(helmet());             // Secure HTTP headers
-app.use(morgan("dev"));        // Log HTTP requests
-app.use(compression());        // Compress responses
-app.use(hpp());                // Prevent HTTP Parameter Pollution
-app.use(mongoSanitize());      // Prevent MongoDB operator injection
-app.use(xss());                // Prevent XSS attacks
+// ================================
+app.use(express.json());       // Parse incoming JSON requests
+app.use(cors());               // Enable Cross-Origin Resource Sharing
+app.use(helmet());             // Set secure HTTP headers
+app.use(morgan("dev"));        // Log HTTP requests in development mode
+app.use(compression());        // Compress response bodies for better performance
+app.use(hpp());                // Prevent HTTP Parameter Pollution attacks
+app.use(mongoSanitize());      // Sanitize user input to prevent MongoDB operator injection
+app.use(xss());                // Clean user input to prevent XSS attacks
 
-// ========================================
+// ================================
 // 📦 Routes
-// Mount the user routes under /api/v1/users
-// ========================================
+// Mount all API routes under /api/v1/users
+// ================================
 app.use("/api/v1/users", userRoutes);
 
-// ========================================
-// ⚠️ Error Handling Middlewares
-// ========================================
-// Example global error handler (to implement)
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).json({ message: "Something went wrong!" });
-// });
+// ================================
+// ⚠️ Global Error Handling Middleware
+// Must be placed after all routes
+// ================================
+app.use(errorHandling);
 
-// Export the app for the server entry point
+// ================================
+// 🔹 Export Express App
+// ================================
 module.exports = app;
