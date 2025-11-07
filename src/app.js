@@ -15,6 +15,9 @@ const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
+// Import user routes
+const userRoutes = require("./routes/userRoutes"); // <-- add this
+
 // Create Express app
 const app = express();
 
@@ -43,10 +46,9 @@ app.use(xss());                // Prevent XSS attacks
 
 // ========================================
 // 📦 Routes
-// Add your API routes here
+// Mount the user routes under /api/v1/users
 // ========================================
-// Example placeholder:
-// app.use('/api/users', require('./routes/userRoutes'));
+app.use("/api/v1/users", userRoutes);
 
 // ========================================
 // ⚠️ Error Handling Middlewares
