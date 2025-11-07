@@ -29,28 +29,37 @@ It follows best practices for **security**, **performance**, and **clean code st
 ---
 
 ## 🏗️ Project Architecture
+## 🏗️ Project Architecture
+
+```bash
 express-project/
 │
 ├── 📁 src/
-│   ├── 🚀 app.js                 # Express app configuration & middlewares
-│   ├── 🚀 server.js              # App startup & environment loading
-│   ├── 📁 config/                # Database & environment configuration
-│   │   └── database.js           # PostgreSQL connection setup
-│   ├── 📁 controllers/           # Business logic controllers
-│   │   └── userController.js     # User management
-│   ├── 📁 routes/                # API routes
-│   │   └── userRoutes.js         # User management routes
-│   ├── 📁 middlewares/           # Security & validation middlewares
+│   ├── 🚀 app.js                # Express app configuration & middlewares
+│   ├── 🚀 server.js             # App startup & environment loading
+│   │
+│   ├── 📁 config/               # Database & environment configuration
+│   │   └── database.js          # PostgreSQL connection setup
+│   │
+│   ├── 📁 controllers/          # Business logic controllers
+│   │   └── userController.js    # User management logic
+│   │
+│   ├── 📁 routes/               # API routes
+│   │   └── userRoutes.js        # User management routes
+│   │
+│   ├── 📁 middlewares/          # Security & validation middlewares
 │   │   ├── validationMiddleware.js # Request validation
-│   │   └── errorMiddleware.js    # Global error handling
-│   └── 📁 utils/                 # Helpers & reusable modules
-│       └── logger.js             # Winston logger setup
+│   │   └── errorMiddleware.js   # Global error handling
+│   │
+│   └── 📁 utils/                # Helpers & reusable modules
+│       └── logger.js            # Winston logger setup
 │
-├── 🔐 .env                       # Environment variables (NOT pushed to GitHub)
-├── 📝 .gitignore                 # Files ignored by Git
-├── 📦 package.json               # Dependencies & scripts
-├── 📚 README.md                  # Project documentation
-└── 🐳 docker-compose.yml         # Docker setup for development
+├── 🔐 .env                      # Environment variables (NOT pushed to GitHub)
+├── 📝 .gitignore                # Files ignored by Git
+├── 📦 package.json              # Dependencies & scripts
+├── 📚 README.md                 # Project documentation
+└── 🐳 docker-compose.yml        # Docker setup for development
+ines
 
 
 
