@@ -1,8 +1,8 @@
 /**
  * @file app.js
  * @description Main application file for the Node.js Express API.
- * This file sets up the Express server, integrates security and performance middlewares,
- * and prepares the application for routing and error handling.
+ * Sets up the Express server, security & performance middlewares,
+ * and prepares the app for routing and error handling.
  */
 
 const express = require("express");
@@ -15,10 +15,7 @@ const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 
-// Custom middlewares (to be implemented)
-
-// Routes (to be implemented)
-
+// Create Express app
 const app = express();
 
 // ========================================
@@ -35,40 +32,30 @@ app.use(limiter);
 // ========================================
 // 🧱 Security & Performance Middlewares
 // ========================================
-
-// Parse incoming JSON requests
-app.use(express.json());
-
-// Enable CORS for cross-origin requests
-app.use(cors());
-
-// Secure HTTP headers with Helmet
-app.use(helmet());
-
-// Log HTTP requests in development mode
-app.use(morgan("dev"));
-
-// Compress response bodies for better performance
-app.use(compression());
-
-// Protect against HTTP Parameter Pollution attacks
-app.use(hpp());
-
-// Sanitize user-supplied data to prevent MongoDB Operator Injection
-app.use(mongoSanitize());
-
-// Clean user input to prevent XSS attacks
-app.use(xss());
+app.use(express.json());       // Parse JSON requests
+app.use(cors());               // Enable CORS
+app.use(helmet());             // Secure HTTP headers
+app.use(morgan("dev"));        // Log HTTP requests
+app.use(compression());        // Compress responses
+app.use(hpp());                // Prevent HTTP Parameter Pollution
+app.use(mongoSanitize());      // Prevent MongoDB operator injection
+app.use(xss());                // Prevent XSS attacks
 
 // ========================================
 // 📦 Routes
+// Add your API routes here
 // ========================================
+// Example placeholder:
+// app.use('/api/users', require('./routes/userRoutes'));
 
 // ========================================
 // ⚠️ Error Handling Middlewares
 // ========================================
+// Example global error handler (to implement)
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).json({ message: "Something went wrong!" });
+// });
 
-// Global error handler
-
-// Export the configured app for server entry point
+// Export the app for the server entry point
 module.exports = app;
