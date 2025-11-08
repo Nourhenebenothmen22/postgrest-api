@@ -14,6 +14,7 @@ const {
   updateUser,
   deleteUser,
 } = require('../controllers/userController');
+const validateUser = require('../middlewares/validationMiddleware');
 
 // ============================
 // 📦 User Routes
@@ -21,7 +22,7 @@ const {
 
 // @route   POST /api/v1/users
 // @desc    Create a new user
-router.post('/', createUser);
+router.post('/',validateUser, createUser);
 
 // @route   GET /api/v1/users
 // @desc    Get all users
@@ -33,7 +34,7 @@ router.get('/:id', getUserById);
 
 // @route   PUT /api/v1/users/:id
 // @desc    Update a user by ID
-router.put('/:id', updateUser);
+router.put('/:id',validateUser, updateUser);
 
 // @route   DELETE /api/v1/users/:id
 // @desc    Delete a user by ID
